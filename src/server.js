@@ -16,5 +16,3 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Corri4endo desde el puerto ${PORT}`);
 });
-
-//console.log(app._router.stack);

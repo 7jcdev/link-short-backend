@@ -2,8 +2,6 @@ import UserModel from "../data/models/UserModel.js";
 import generateJWT from "../util/generateJWT.js";
 import ShortModel from "../data/models/ShortModel.js";
 
-// TODO: Se puede poner un limite de usuarios por IP.
-
 const registerUser = async (req, res) => {
     const { email, name } = req.body;
     const checkUser = await UserModel.findOne({ email });
@@ -16,8 +14,6 @@ const registerUser = async (req, res) => {
     try {
         const model = new UserModel(req.body);
         const savedModel = await model.save();
-
-        // Excluimos la contraseña por seguridad.
         const { _id, name, email } = savedModel;
         res.status(200).json({
             id: _id,
@@ -34,7 +30,7 @@ const login = async (req, res) => {
     const user = await UserModel.findOne({ email });
 
     if (!user) {
-        const error = new Error("Usuaio no encontrado");
+        const error = new Error("Usuario no encontrado");
         return res.status(404).json({ msg: error.message });
     }
 
@@ -46,7 +42,7 @@ const login = async (req, res) => {
             token: generateJWT(user.id)
         });
     } else {
-        const error = new Error("Password Incorrecto");
+        const error = new Error("Contraseña incorrecta");
         return res.status(403).json({ msg: error.message });
     }
 };
@@ -56,7 +52,7 @@ const profile = (req, res) => {
     res.json(user);
 };
 
-const updateProfile = async (req, res) => {
+const editProfile = async (req, res) => {
     const user = await UserModel.findById(req.params.id);
     if (!user) {
         const error = new Error("Id de usuario no encontrado");
@@ -67,7 +63,7 @@ const updateProfile = async (req, res) => {
     if (user.email !== req.body.email) {
         const checkEmail = await UserModel.findOne({ email });
         if (checkEmail) {
-            const error = new Error("Email esta en uso");
+            const error = new Error("Email ya está en uso");
             return res.status(400).json({ msg: error.message });
         }
     }
@@ -105,5 +101,4 @@ const deleteProfile = async (req, res) => {
     }
 };
 
-
-export { registerUser, login, profile, updateProfile, deleteProfile } 
+export { registerUser, login, profile, editProfile, deleteProfile } 

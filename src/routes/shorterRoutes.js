@@ -1,17 +1,17 @@
 import express from "express";
 import checkAuth from "../middleware/checkAuth.js";
 import {
-    createShort, createPrivateShort, deletePrivateShort, editPrivateShort
+    createPublicShort, createShort, deleteShort, editShort
 } from "../controllers/ShortController.js";
 
 const router = express.Router();
 
 // Usuario publico.
-router.post("/createShort", createShort);
+router.post("/create-public-short", createPublicShort);
 
 // Usuario registrado.
-router.post("/create-private-short", checkAuth, createPrivateShort);
-router.delete("/delete-private-short/:id", checkAuth, deletePrivateShort);
-router.put("/edit-private-short/:id", checkAuth, editPrivateShort);
+router.post("/create-short", checkAuth, createShort);
+router.delete("/delete-short/:id", checkAuth, deleteShort);
+router.put("/edit-short/:id", checkAuth, editShort);
 
 export default router;

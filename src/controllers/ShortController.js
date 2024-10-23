@@ -3,22 +3,21 @@ import PublicShortModel from "../data/models/PublicShortModel.js";
 import ShortModel from "../data/models/ShortModel.js";
 
 // Publico.
-// Este se guarda sin el id del usuario.
-const createShort = async (req, res) => {
+const createPublicShort = async (req, res) => {
     try {
         const { url, shortUrl } = short(req);
         const model = new PublicShortModel({ url, shortUrl });
         const modelSaved = await model.save();
 
         // Borramos la URL de la base de datos luego de un tiempo, ya que este proyecto es solo una demo.
-        autoDeleteUrl(modelSaved, res);
+        autoDeleteShort(modelSaved, res);
         return res.status(200).json(modelSaved);
     } catch (error) {
         res.json(error.message);
     }
 };
 
-const autoDeleteUrl = async (model, res) => {
+const autoDeleteShort = async (model, res) => {
     setTimeout(async () => {
         const url = await PublicShortModel.findById(model._id);
         try {
@@ -29,15 +28,12 @@ const autoDeleteUrl = async (model, res) => {
         } catch (error) {
             console.log(error.message);
         }
-    }, "60000"); // Esto se borra en un minuto.
+    }, "60000"); // 1 minute.
 }
 
-
-// Se requiere estar logeado.
-// Este se guarda con el id del usuario.
-
-// TODO: Se puede poner un limite de urls guardadas por cada usuario y un limite de usuarios por IP.
-const createPrivateShort = async (req, res) => {
+// Usuario registrado.
+// TODO: Añadir limite de links por usuario.
+const createShort = async (req, res) => {
     if (!req.user) {
         return res.status(404).json({ msg: "Usuario logeado no encontrado" });
     }
@@ -53,9 +49,8 @@ const createPrivateShort = async (req, res) => {
     }
 };
 
-const deletePrivateShort = async (req, res) => {
+const deleteShort = async (req, res) => {
     const userId = req.user._id;
-
     if (!userId) {
         return res.status(404).json({ msg: "Usuario logeado no encontrado" });
     }
@@ -77,7 +72,7 @@ const deletePrivateShort = async (req, res) => {
     }
 };
 
-const editPrivateShort = async (req, res) => {
+const editShort = async (req, res) => {
     const userId = req.user._id;
     if (!userId) {
         return res.status(404).json({ msg: "Usuario logeado no encontrado" });
@@ -108,5 +103,5 @@ const short = (req) => {
 };
 
 export {
-    createShort, createPrivateShort, deletePrivateShort, editPrivateShort
+    createPublicShort, createShort, deleteShort, editShort
 }
