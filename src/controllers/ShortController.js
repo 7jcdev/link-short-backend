@@ -11,6 +11,8 @@ const createPublicShort = async (req, res) => {
 
         // Borramos la URL de la base de datos luego de un tiempo, ya que este proyecto es solo una demo.
         autoDeleteShort(modelSaved, res);
+
+        console.log(modelSaved);
         return res.status(200).json(modelSaved);
     } catch (error) {
         res.json(error.message);
