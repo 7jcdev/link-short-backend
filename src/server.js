@@ -12,17 +12,29 @@ connectDB();
 
 const corsUrl = [process.env.FRONTEND_URI];
 
-const corsOptions = {
+// TODO: Arreglar cors.
+/*const corsOptions = {
     origin: function (origin, callback) {
-        if (corsUrl.indexOf(origin) !== -1)
-            callback(null, true)
+        if (corsUrl.indexOf(origin) !== -1){
+
+            const options = { "origin": "true", "methods": "GET,HEAD,PUT,PATCH,POST,DELETE" }
+            callback(null, options)
+        }
         else {
             callback(new Error("No permitido por Cors"));
         }
     }
 }
+app.use(cors(corsOptions));    
+*/
 
-app.use(cors(corsOptions));
+app.use((req, res, next)=>{
+    res.append("Access-Control-Allow-Origin", [`${corsUrl}`])
+    res.append("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE")
+    res.append('Access-Control-Allow-Headers', 'Content-Type');
+    res.append('Access-Control-Allow-Credentials', true)
+    next()
+})
 app.use("/api/users", userRoutes);
 app.use("/api/short", shorterRoutes);
 
