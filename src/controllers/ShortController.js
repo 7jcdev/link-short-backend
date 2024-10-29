@@ -30,7 +30,7 @@ const autoDeleteShort = async (model, res) => {
         } catch (error) {
             console.log(error.message);
         }
-    }, "60000"); // 1 minute.
+    }, "120000"); // 2 minutos.
 }
 
 const getPublicShort = async (req, res) => {
