@@ -33,6 +33,20 @@ const autoDeleteShort = async (model, res) => {
     }, "60000"); // 1 minute.
 }
 
+const getPublicShort = async (req, res) => {
+    try {
+        const short = await PublicShortModel.findOne({ shortUrl: req.params.url });
+        if(!short){
+            return res.status(403).json({ msg: "Url no encontrada" });
+        }
+        console.log(short);
+        return res.status(200).json({url: short.url, shortUrl: short.shortUrl, msg: "Url obtenida con exito"});
+    }
+    catch (error) {
+        res.json(error.message);
+    }
+}
+
 // Usuario registrado.
 // TODO: Añadir limite de links por usuario.
 const createShort = async (req, res) => {
@@ -105,5 +119,5 @@ const short = (req) => {
 };
 
 export {
-    createPublicShort, createShort, deleteShort, editShort
+    createPublicShort, createShort, deleteShort, editShort, getPublicShort
 }
